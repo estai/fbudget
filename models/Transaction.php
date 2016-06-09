@@ -46,11 +46,11 @@ class Transaction extends \yii\db\ActiveRecord {
     public function attributeLabels() {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
+            'user_id' => 'Имя пользователя',
             'cat_id' => 'Категория транзакции',
             'summ' => 'Сумма',
             'balance' => 'Balance',
-            'date' => 'Date',
+            'date' => 'Дата',
             'year' => 'Год',
         ];
     }

@@ -51,11 +51,12 @@ AppAsset::register($this);
             ?>
 
             <div class="container">
+
 <?=
 Breadcrumbs::widget([
     'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 ])
-?>
+?> <p class="text-success">Семейный бюджет:<?=  app\components\BidgetWidget::widget()?></p>
                  <?= Alert::widget() ?>   
                 <?= $content ?>
             </div>

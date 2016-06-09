@@ -31,14 +31,14 @@ $config = [
             'rules' => [
             ],
         ],
-        'assetManager' => [
-            'appendTimestamp' => true,
-            'bundles' => [
-                'yii\bootstrap\BootstrapAsset' => [
-                    'css' => ['https://bootswatch.com/flatly/bootstrap.min.css'],
-                ],
-            ],
-        ],
+       // 'assetManager' => [
+       //     'appendTimestamp' => true,
+       //     'bundles' => [
+        //        'yii\bootstrap\BootstrapAsset' => [
+       //             'css' => ['https://bootswatch.com/flatly/bootstrap.min.css'],
+        //        ],
+       //     ],
+       // ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\TransactionSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -10,9 +11,11 @@ use app\models\Transaction;
 use app\models\User;
 use yii\web\NotFoundHttpException;
 
-class StatController extends Controller {
+class StatController extends Controller
+{
 
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -22,9 +25,9 @@ class StatController extends Controller {
                         'roles' => ['user', 'admin'],
                     ],
                 ],
-                'denyCallback' => function($rule, $action) {
-            $this->redirect('/site/login');
-        },
+                'denyCallback' => function ($rule, $action) {
+                    $this->redirect('/site/login');
+                },
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -35,19 +38,17 @@ class StatController extends Controller {
         ];
     }
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $days = [];
         $balance = [];
-        $users = \app\models\User::find()->where(['!=', 'id', '1'])->all();
-        if (Yii::$app->request->isAjax) {
-            $post = Yii::$app->request->post();
-
-            $data=\DateTime::createFromFormat('m.y', $post["date"]);
-            var_dump($data);die();
+        if ($filter = Yii::$app->request->post()) {
+            $data = strtotime($filter['date']);
             $time = strtotime(date('M.Y', $data));
-            $current = strtotime(date('d.M.Y', $data+2678400));
-
-
+            $current = strtotime(date('d.M.Y', $data + 2678400));
+            if ($current > time()) {
+                $current = strtotime(date('d.M.Y', time()));
+            }
         } else {
             $time = strtotime(date('M.Y', time()));
             $current = strtotime(date('d.M.Y', time()));
@@ -57,22 +58,27 @@ class StatController extends Controller {
             $days[] = date('d.m', $i);
             $balance[] = $this->findBalance(date('d.M.Y', $i));
         }
-      # var_dump($days);die();
+        $searchModel = new TransactionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index', [
-                    'days' => $days,
-                    'balance' => $balance,
-                    'users' => $users
+            'days' => $days,
+            'balance' => $balance,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
-    public function actionUser($id) {
+    public function actionUser($id)
+    {
         $model = $this->findUser($id);
         return $this->render('user', [
-                    'model' => $model
+            'model' => $model
         ]);
     }
 
-    public function actionFullStat() {
+
+    public function actionFullStat()
+    {
         $years = [];
         $balance = [];
         for ($i = date('Y', time()); $i <= date('Y'); $i++) {
@@ -80,12 +86,13 @@ class StatController extends Controller {
             $balance[] = $this->findBalanceYear($i);
         }
         return $this->render('full', [
-                    'years' => $years,
-                    'balance' => $balance,
+            'years' => $years,
+            'balance' => $balance,
         ]);
     }
 
-    protected function findBalance($date) {
+    protected function findBalance($date)
+    {
         $time = strtotime($date);
         $model = Transaction::find()->where(['between', 'date', $time, $time + 86399])->orderBy(['date' => SORT_DESC])->one();
         if ($model) {
@@ -95,7 +102,8 @@ class StatController extends Controller {
         }
     }
 
-    protected function findBalanceYear($i) {
+    protected function findBalanceYear($i)
+    {
         $model = Transaction::find()->where(['year' => $i])->orderBy(['date' => SORT_DESC])->one();
         if ($model) {
             return $model->balance;
@@ -104,7 +112,8 @@ class StatController extends Controller {
         }
     }
 
-    protected function findUser($id) {
+    protected function findUser($id)
+    {
         if (($model = User::findOne($id)) !== null) {
             return $model;
         } else {

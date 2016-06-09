@@ -77,6 +77,7 @@ class HomeController extends Controller {
             return \app\models\Budget::find()->one()->summ;
         }
     }
+    
 
     protected function calculateBalance($entity) {
         $entity->date = time();
