@@ -98,7 +98,9 @@ class StatController extends Controller
         if ($model) {
             return $model->balance;
         } else {
-            return \app\models\Budget::find()->one()->summ;
+			$entity = Transaction::find()->where(['<', 'date', $time])->orderBy(['date' => SORT_DESC])->one();
+			return $entity?$entity->balance:\app\models\Budget::find()->one()->summ;
+            
         }
     }
 

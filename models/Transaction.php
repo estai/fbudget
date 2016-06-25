@@ -33,7 +33,7 @@ class Transaction extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['user_id', 'cat_id', 'summ', 'balance', 'date'], 'integer'],
-            [['date', 'year'], 'required'],
+            [['date', 'year','cat_id', 'summ'], 'required'],
             [['year'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['cat_id'], 'exist', 'skipOnError' => true, 'targetClass' => CatTransaction::className(), 'targetAttribute' => ['cat_id' => 'id']],
