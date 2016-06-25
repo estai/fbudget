@@ -56,7 +56,7 @@ AppAsset::register($this);
 Breadcrumbs::widget([
     'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 ])
-?><?php  if (Yii::$app->user->isGuest):?> <p class="text-success">Семейный бюджет:<?=  app\components\BidgetWidget::widget()?></p><?php endif;?>
+?><?php  if (!Yii::$app->user->isGuest):?> <p class="text-success">Семейный бюджет:<?=  app\components\BidgetWidget::widget()?></p><?php endif;?>
                  <?= Alert::widget() ?>   
                 <?= $content ?>
             </div>
